@@ -242,6 +242,7 @@ function textToHtml(text, query) {
   // 1. HTML 특수문자 이스케이프
   let safe = escHtml(text);
   // 2. 줄바꿈을 <br>로 변환
+  safe = safe.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   safe = safe.split('\n').join('<br>');
   // 3. 검색어 하이라이트
   if (query) {
@@ -367,7 +368,8 @@ document.addEventListener('click', e => {
 
 async function addMemo() {
   const inp = document.getElementById('memo-input');
-  const text = inp.value.trim();
+  // 모든 종류의 줄바꿈을 \n 으로 정규화
+  const text = inp.value.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
   if (!text) return;
   document.getElementById('add-btn').disabled = true;
   inp.value = ''; inp.style.height = '';
