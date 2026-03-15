@@ -456,16 +456,17 @@ function renderMemos() {
     const p = m.priority || 'none';
     const htmlText = textToHtml(m.text, q);
     const tagsHtml = m.tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('');
-    return '<div class="memo-card" data-id="' + m.id + '" data-p="' + p + '">' +
+    const id = m.id;
+    return '<div class="memo-card" data-id="' + id + '" data-p="' + p + '">' +
       '<div class="card-top">' +
-        '<div class="pri-badge" data-p="' + p + '" onclick="openPriPopup(\'' + m.id + '\')">' + badge[p] + '</div>' +
-        '<div class="memo-text-wrap" ondblclick="startEdit(\'' + m.id + '\')">' +
+        '<div class="pri-badge" data-p="' + p + '" data-action="priority" data-mid="' + id + '">' + badge[p] + '</div>' +
+        '<div class="memo-text-wrap" data-action="edit" data-mid="' + id + '">' +
           '<p>' + htmlText + '</p>' +
         '</div>' +
         '<div class="card-actions">' +
-          '<button class="action-btn" onclick="copyMemo(' + JSON.stringify(m.text) + ')">📋</button>' +
-          '<button class="action-btn" onclick="startEdit(\'' + m.id + '\')">✏️</button>' +
-          '<button class="action-btn" onclick="deleteMemo(\'' + m.id + '\')">✕</button>' +
+          '<button class="action-btn" data-action="copy" data-mid="' + id + '">📋</button>' +
+          '<button class="action-btn" data-action="edit" data-mid="' + id + '">✏️</button>' +
+          '<button class="action-btn" data-action="delete" data-mid="' + id + '">✕</button>' +
         '</div>' +
       '</div>' +
       '<div class="card-bottom">' +
@@ -475,6 +476,22 @@ function renderMemos() {
     '</div>';
   }).join('');
 }
+
+// ── Event Delegation (버튼 클릭 처리) ──
+document.getElementById('memo-list').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  e.stopPropagation();
+  const action = btn.dataset.action;
+  const id = btn.dataset.mid;
+  if (action === 'delete') deleteMemo(id);
+  else if (action === 'edit') startEdit(id);
+  else if (action === 'priority') openPriPopup(id);
+  else if (action === 'copy') {
+    const m = memos.find(x => String(x.id) === String(id));
+    if (m) copyMemo(m.text);
+  }
+});
 
 // ── Input Events ──
 document.getElementById('memo-input').addEventListener('keydown', function(e) {
