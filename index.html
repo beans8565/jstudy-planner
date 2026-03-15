@@ -103,7 +103,7 @@
   .memo-card.deleting{animation:slideOut .24s ease forwards}
   @keyframes slideOut{to{opacity:0;transform:translateX(20px) scale(.97)}}
 
-  .card-top{padding:11px 11px 8px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .card-top{padding:11px 11px 8px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;overflow:hidden}
   .pri-badge{width:21px;height:21px;border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.67rem;font-weight:700;cursor:pointer;user-select:none}
   .pri-badge:active{transform:scale(1.2)}
   .pri-badge[data-p="high"]{background:var(--red);color:white}
@@ -111,7 +111,7 @@
   .pri-badge[data-p="low"] {background:var(--green);color:white}
   .pri-badge[data-p="none"]{background:var(--line);color:var(--ghost)}
 
-  .memo-text{font-size:.89rem;line-height:1.75;color:var(--ink);font-weight:300;white-space:normal;word-break:break-word;flex:1}
+  .memo-text{font-size:.89rem;line-height:1.75;color:var(--ink);font-weight:300;white-space:pre-wrap;word-break:break-word;flex:1;min-width:0}
   .memo-text.editing{background:var(--paper);border:1px solid var(--accent);border-radius:4px;padding:5px 8px;outline:none;resize:none;width:100%;min-height:50px;font-family:'Noto Sans KR',sans-serif;font-size:.89rem;line-height:1.75;color:var(--ink)}
 
   .card-actions{display:flex;gap:1px;flex-shrink:0}
@@ -256,7 +256,7 @@ function formatTime(ts){
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function escReg(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
 function highlight(t,q){
-  const safe = escHtml(t).replace(/\n/g,'<br>');
+  const safe = escHtml(t);
   if(!q)return safe;
   return safe.replace(new RegExp('('+escReg(escHtml(q))+')','gi'),'<mark>$1</mark>');
 }
