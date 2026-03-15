@@ -256,8 +256,7 @@ function formatTime(ts){
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function escReg(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
 function highlight(t,q){
-  const safe = escHtml(t).replace(/
-/g,'<br>');
+  const safe = escHtml(t).replace(/\n/g,'<br>');
   if(!q)return safe;
   return safe.replace(new RegExp('('+escReg(escHtml(q))+')','gi'),'<mark>$1</mark>');
 }
