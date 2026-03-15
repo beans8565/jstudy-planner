@@ -108,7 +108,7 @@
   .pri-badge[data-p="low"] {background:var(--green);color:white}
   .pri-badge[data-p="none"]{background:var(--line);color:var(--ghost)}
 
-  .memo-text{font-size:.89rem;line-height:1.75;color:var(--ink);font-weight:300;white-space:pre-wrap;word-break:break-word;flex:1}
+  .memo-text{font-size:.89rem;line-height:1.75;color:var(--ink);font-weight:300;white-space:normal;word-break:break-word;flex:1}
   .memo-text.editing{background:var(--paper);border:1px solid var(--accent);border-radius:4px;padding:5px 8px;outline:none;resize:none;width:100%;min-height:50px;font-family:'Noto Sans KR',sans-serif;font-size:.89rem;line-height:1.75;color:var(--ink)}
 
   .card-actions{display:flex;gap:1px;flex-shrink:0}
@@ -253,8 +253,10 @@ function formatTime(ts){
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function escReg(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
 function highlight(t,q){
-  if(!q)return escHtml(t);
-  return escHtml(t).replace(new RegExp('('+escReg(q)+')','gi'),'<mark>$1</mark>');
+  const safe = escHtml(t).replace(/
+/g,'<br>');
+  if(!q)return safe;
+  return safe.replace(new RegExp('('+escReg(escHtml(q))+')','gi'),'<mark>$1</mark>');
 }
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 function updateCount(){document.getElementById('count-display').textContent=`메모 ${memos.length}개`}
